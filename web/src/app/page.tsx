@@ -1,34 +1,10 @@
+import Link from "next/link";
+import { AppShell } from "@/components/Shell";
+
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
-      <header className="border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-cyan-400 via-sky-500 to-indigo-500" />
-          <span className="font-semibold text-lg">CrossChainLend</span>
-        </div>
-        <nav className="flex gap-4 text-sm text-slate-300">
-          <a href="#" className="hover:text-white">
-            Dashboard
-          </a>
-          <a href="#" className="hover:text-white">
-            Markets
-          </a>
-          <a href="#" className="hover:text-white">
-            Lend
-          </a>
-          <a href="#" className="hover:text-white">
-            Borrow
-          </a>
-          <a href="#" className="hover:text-white">
-            Cross-chain Borrow
-          </a>
-        </nav>
-        <button className="rounded-full bg-sky-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-sky-400">
-          Connect Wallet
-        </button>
-      </header>
-
-      <section className="flex-1 px-6 py-10 flex flex-col lg:flex-row gap-8">
+    <AppShell>
+      <section className="flex flex-col lg:flex-row gap-8">
         <div className="flex-1 space-y-6">
           <h1 className="text-3xl md:text-4xl font-semibold">
             Cross-chain lending &amp; borrowing
@@ -39,12 +15,18 @@ export default function HomePage() {
             management, and smart routing. Built for next-generation cross-chain DeFi.
           </p>
           <div className="flex flex-wrap gap-3">
-            <button className="rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400">
+            <Link
+              href="/dashboard"
+              className="rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400"
+            >
               Launch dashboard
-            </button>
-            <button className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium text-slate-100 hover:border-sky-500">
+            </Link>
+            <Link
+              href="/markets"
+              className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium text-slate-100 hover:border-sky-500"
+            >
               Explore markets
-            </button>
+            </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs md:text-sm">
             <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
@@ -103,7 +85,6 @@ export default function HomePage() {
           </div>
         </aside>
       </section>
-    </main>
+    </AppShell>
   );
 }
-
