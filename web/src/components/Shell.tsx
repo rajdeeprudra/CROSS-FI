@@ -1,5 +1,9 @@
+ "use client";
+
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
@@ -10,6 +14,14 @@ const navItems = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const { publicKey } = useWallet();
+  const { setVisible } = useWalletModal();
+
+  const shortAddress =
+    publicKey != null
+      ? `${publicKey.toBase58().slice(0, 4)}...${publicKey.toBase58().slice(-4)}`
+      : null;
+
   return (
     <main className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
       <header className="border-b border-slate-800 px-6 py-4 flex items-center justify-between">
@@ -24,8 +36,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        <button className="rounded-full bg-sky-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-sky-400">
-          Connect Wallet
+        <button
+          onClick={() => setVisible(true)}
+          className="rounded-full bg-sky-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-sky-400"
+        >
+          {shortAddress ?? "Connect Solana wallet"}
         </button>
       </header>
       <div className="flex-1 px-4 md:px-6 lg:px-8 py-6">{children}</div>
