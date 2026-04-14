@@ -1,4 +1,5 @@
 import { AppShell } from "@/components/Shell";
+import { DashboardBalances } from "@/components/DashboardBalances";
 
 export default function DashboardPage() {
   return (
@@ -10,6 +11,8 @@ export default function DashboardPage() {
             Overview of your cross-chain positions across Solana, Polygon, Arbitrum, and Base.
           </p>
         </div>
+
+        <DashboardBalances />
 
         <div className="grid gap-4 md:grid-cols-3">
           <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">

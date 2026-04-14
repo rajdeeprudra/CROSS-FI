@@ -23,11 +23,18 @@ npm install
 npm run dev
 ```
 
-Then open `http://localhost:3000` in your browser.
+Then open `http://localhost:3000` in your browser (if the port is busy, Next will pick another, e.g. `3001`).
 
-## Next steps
+## What works today
 
-- Add Solana (Rust) and EVM (Solidity) contract deployments.
-- Integrate wallet adapters for Solana and EVM chains.
-- Implement dashboards for positions, markets, and cross-chain borrow flows.
+- Solana wallet (Phantom / Solflare) and EVM wallet (MetaMask-style `window.ethereum`).
+- Chain switch for Polygon / Arbitrum / Base.
+- **Dashboard: live USDC wallet balances** on Solana mainnet and on the selected EVM chain (reads on-chain; no lending pool yet).
+
+## Roadmap (step by step)
+
+1. **Liquidity protocol (on-chain)** — Solana program (Rust/Anchor) + EVM lending pool (Solidity): deposits, borrows, interest, liquidations.
+2. **Deploy + wire addresses** — env-based program/pool IDs; replace mock markets with live APYs/utilization.
+3. **Cross-chain credit** — message layer (e.g. Wormhole) + controllers on each chain; UI for cross-chain borrow wizard.
+4. **Hardening** — oracles (Pyth / Chainlink), indexing, gas/relayer UX, optional KYC-gated pools.
 
