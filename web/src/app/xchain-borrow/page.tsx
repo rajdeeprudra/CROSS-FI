@@ -1,14 +1,29 @@
+"use client";
+
+import { useState } from "react";
 import { AppShell } from "@/components/Shell";
 
 export default function CrossChainBorrowPage() {
+  const [borrowAmount, setBorrowAmount] = useState(0);
+
+  // Mock values (for thesis/demo)
+  const collateral = 1000; // assume user deposited
+  const collateralFactor = 0.75;
+
+  const ltv = collateral === 0 ? 0 : (borrowAmount / collateral) * 100;
+  const health =
+    borrowAmount === 0 ? Infinity : (collateral * collateralFactor) / borrowAmount;
+
   return (
     <AppShell>
       <div className="space-y-6 max-w-3xl">
         <div>
-          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Cross-chain borrow</h1>
+          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
+            Cross-chain borrow
+          </h1>
           <p className="mt-2 text-sm text-slate-300">
-            Supply USDC on one chain and borrow on another. This wizard will later be wired to
-            Solana + EVM cross-chain controllers.
+            Supply USDC on one chain and borrow on another. This wizard simulates
+            cross-chain routing and risk evaluation.
           </p>
         </div>
 
@@ -23,11 +38,13 @@ export default function CrossChainBorrowPage() {
                 <option>Arbitrum</option>
                 <option>Base</option>
               </select>
+
               <label className="block text-xs mb-1 text-slate-400">Collateral asset</label>
               <select className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100">
                 <option>USDC</option>
               </select>
             </div>
+
             <div>
               <h2 className="text-sm font-medium text-slate-200 mb-3">Borrow side</h2>
               <label className="block text-xs mb-1 text-slate-400">Borrow chain</label>
@@ -37,6 +54,7 @@ export default function CrossChainBorrowPage() {
                 <option>Base</option>
                 <option>Solana</option>
               </select>
+
               <label className="block text-xs mb-1 text-slate-400">Asset to borrow</label>
               <select className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100">
                 <option>USDC</option>
@@ -51,22 +69,29 @@ export default function CrossChainBorrowPage() {
             <input
               type="number"
               placeholder="0.00"
-              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500"
+              onChange={(e) => setBorrowAmount(Number(e.target.value))}
+              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100"
             />
           </div>
 
           <div className="grid gap-4 md:grid-cols-3 text-xs text-slate-300">
-            <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3">
+            <div className="rounded-xl border border-slate-800 p-3">
               <div className="text-slate-400">Estimated LTV</div>
-              <div className="mt-1 text-base font-semibold text-slate-100">0%</div>
+              <div className="mt-1 text-base font-semibold">{ltv.toFixed(2)}%</div>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3">
-              <div className="text-slate-400">Estimated health factor</div>
-              <div className="mt-1 text-base font-semibold text-emerald-400">∞</div>
+
+            <div className="rounded-xl border border-slate-800 p-3">
+              <div className="text-slate-400">Health factor</div>
+              <div className="mt-1 text-base font-semibold text-emerald-400">
+                {health === Infinity ? "∞" : health.toFixed(2)}
+              </div>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3">
-              <div className="text-slate-400">Estimated route APR</div>
-              <div className="mt-1 text-base font-semibold text-sky-400">–</div>
+
+            <div className="rounded-xl border border-slate-800 p-3">
+              <div className="text-slate-400">Estimated APR</div>
+              <div className="mt-1 text-base font-semibold text-sky-400">
+                {(3 + ltv * 0.1).toFixed(2)}%
+              </div>
             </div>
           </div>
 
@@ -78,4 +103,3 @@ export default function CrossChainBorrowPage() {
     </AppShell>
   );
 }
-

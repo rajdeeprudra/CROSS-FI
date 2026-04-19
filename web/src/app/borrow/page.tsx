@@ -1,49 +1,43 @@
+"use client";
+
+import { useState } from "react";
 import { AppShell } from "@/components/Shell";
 
 export default function BorrowPage() {
+  const [amount, setAmount] = useState(0);
+
+  const maxBorrow = 750; // mock collateral logic
+
   return (
     <AppShell>
       <div className="space-y-6 max-w-2xl">
         <div>
-          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Borrow</h1>
+          <h1 className="text-2xl md:text-3xl font-semibold">Borrow</h1>
           <p className="mt-2 text-sm text-slate-300">
-            Borrow assets against your USDC collateral on a single chain. Cross-chain borrowing has
-            its own flow.
+            Borrow assets against your collateral with dynamic limits.
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="block text-xs mb-1 text-slate-400">Chain</label>
-              <select className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100">
-                <option>Solana</option>
-                <option>Polygon</option>
-                <option>Arbitrum</option>
-                <option>Base</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs mb-1 text-slate-400">Asset to borrow</label>
-              <select className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100">
-                <option>USDC</option>
-                <option>USDT</option>
-                <option>WETH</option>
-              </select>
-            </div>
+        <div className="rounded-2xl border border-slate-800 p-4 space-y-4">
+          <select className="w-full bg-slate-950 p-2 rounded">
+            <option>Solana</option>
+            <option>Polygon</option>
+            <option>Arbitrum</option>
+            <option>Base</option>
+          </select>
+
+          <input
+            type="number"
+            placeholder="0.00"
+            onChange={(e) => setAmount(Number(e.target.value))}
+            className="w-full bg-slate-950 p-2 rounded"
+          />
+
+          <div className="text-xs text-slate-400">
+            Max borrow: {maxBorrow} USDC
           </div>
 
-          <div>
-            <label className="block text-xs mb-1 text-slate-400">Amount</label>
-            <input
-              type="number"
-              placeholder="0.00"
-              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500"
-            />
-            <div className="mt-1 text-xs text-slate-500">Max borrow: 0.00</div>
-          </div>
-
-          <button className="w-full rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400">
+          <button className="w-full bg-sky-500 p-2 rounded">
             Borrow
           </button>
         </div>
@@ -51,4 +45,3 @@ export default function BorrowPage() {
     </AppShell>
   );
 }
-
