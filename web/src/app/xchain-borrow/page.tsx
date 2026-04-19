@@ -2,100 +2,63 @@
 
 import { useState } from "react";
 import { AppShell } from "@/components/Shell";
+import { getCrossChainContract } from "@/lib/contract";
+import { ethers } from "ethers";
 
 export default function CrossChainBorrowPage() {
-  const [borrowAmount, setBorrowAmount] = useState(0);
+  const [amount, setAmount] = useState("");
 
-  // Mock values (for thesis/demo)
-  const collateral = 1000; // assume user deposited
-  const collateralFactor = 0.75;
+  const handleCrossChain = async () => {
+    try {
+      if (!amount || Number(amount) <= 0) {
+        alert("Enter valid amount");
+        return;
+      }
 
-  const ltv = collateral === 0 ? 0 : (borrowAmount / collateral) * 100;
-  const health =
-    borrowAmount === 0 ? Infinity : (collateral * collateralFactor) / borrowAmount;
+      const contract = await getCrossChainContract();
+
+      const tx = await contract.createPosition(
+        "Solana",
+        "Polygon",
+        ethers.parseUnits(amount, 18)
+      );
+
+      await tx.wait();
+
+      alert("✅ Cross-chain position created!");
+    } catch (err) {
+      console.error(err);
+      alert("❌ Transaction failed");
+    }
+  };
 
   return (
     <AppShell>
       <div className="space-y-6 max-w-3xl">
         <div>
-          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-semibold">
             Cross-chain borrow
           </h1>
           <p className="mt-2 text-sm text-slate-300">
-            Supply USDC on one chain and borrow on another. This wizard simulates
-            cross-chain routing and risk evaluation.
+            Supply USDC on one chain and borrow on another.
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 space-y-6">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <h2 className="text-sm font-medium text-slate-200 mb-3">Collateral side</h2>
-              <label className="block text-xs mb-1 text-slate-400">Collateral chain</label>
-              <select className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 mb-3">
-                <option>Solana</option>
-                <option>Polygon</option>
-                <option>Arbitrum</option>
-                <option>Base</option>
-              </select>
+        <div className="rounded-2xl border border-slate-800 p-4 space-y-6">
+          {/* INPUT */}
+          <input
+            type="number"
+            placeholder="0.00"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="w-full bg-slate-950 p-2 rounded"
+          />
 
-              <label className="block text-xs mb-1 text-slate-400">Collateral asset</label>
-              <select className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100">
-                <option>USDC</option>
-              </select>
-            </div>
-
-            <div>
-              <h2 className="text-sm font-medium text-slate-200 mb-3">Borrow side</h2>
-              <label className="block text-xs mb-1 text-slate-400">Borrow chain</label>
-              <select className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 mb-3">
-                <option>Polygon</option>
-                <option>Arbitrum</option>
-                <option>Base</option>
-                <option>Solana</option>
-              </select>
-
-              <label className="block text-xs mb-1 text-slate-400">Asset to borrow</label>
-              <select className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100">
-                <option>USDC</option>
-                <option>USDT</option>
-                <option>WETH</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs mb-1 text-slate-400">Borrow amount</label>
-            <input
-              type="number"
-              placeholder="0.00"
-              onChange={(e) => setBorrowAmount(Number(e.target.value))}
-              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100"
-            />
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-3 text-xs text-slate-300">
-            <div className="rounded-xl border border-slate-800 p-3">
-              <div className="text-slate-400">Estimated LTV</div>
-              <div className="mt-1 text-base font-semibold">{ltv.toFixed(2)}%</div>
-            </div>
-
-            <div className="rounded-xl border border-slate-800 p-3">
-              <div className="text-slate-400">Health factor</div>
-              <div className="mt-1 text-base font-semibold text-emerald-400">
-                {health === Infinity ? "∞" : health.toFixed(2)}
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-slate-800 p-3">
-              <div className="text-slate-400">Estimated APR</div>
-              <div className="mt-1 text-base font-semibold text-sky-400">
-                {(3 + ltv * 0.1).toFixed(2)}%
-              </div>
-            </div>
-          </div>
-
-          <button className="w-full rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400">
+          {/* BUTTON */}
+          <button
+            onClick={handleCrossChain}
+            className="w-full bg-sky-500 px-4 py-2 text-white rounded"
+          >
             Create cross-chain position
           </button>
         </div>

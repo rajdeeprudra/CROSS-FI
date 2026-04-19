@@ -1,5 +1,5 @@
 "use client";
-
+import { ethers } from "ethers";
 import { useState } from "react";
 import { AppShell } from "@/components/Shell";
 import { getContract } from "@/lib/contract";
@@ -10,8 +10,16 @@ export default function LendPage() {
   const handleDeposit = async () => {
     try {
       const contract = await getContract();
-      const tx = await contract.deposit(amount);
+      const tx = await contract.deposit(ethers.parseUnits(amount.toString(),18));
       await tx.wait();
+
+      //const tx = await contract.deposit(
+ // ethers.parseUnits(amount.toString(), 18)
+//);
+      //
+      //
+      //
+
 
       alert("Deposit successful!");
     } catch (err) {
