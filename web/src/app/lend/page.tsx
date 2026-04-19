@@ -2,9 +2,23 @@
 
 import { useState } from "react";
 import { AppShell } from "@/components/Shell";
+import { getContract } from "@/lib/contract";
 
 export default function LendPage() {
   const [amount, setAmount] = useState(0);
+
+  const handleDeposit = async () => {
+    try {
+      const contract = await getContract();
+      const tx = await contract.deposit(amount);
+      await tx.wait();
+
+      alert("Deposit successful!");
+    } catch (err) {
+      console.error(err);
+      alert("Transaction failed");
+    }
+  };
 
   return (
     <AppShell>
@@ -35,7 +49,10 @@ export default function LendPage() {
             Estimated APY: {(3 + amount * 0.002).toFixed(2)}%
           </div>
 
-          <button className="w-full bg-sky-500 p-2 rounded">
+          <button
+            onClick={handleDeposit}
+            className="w-full bg-sky-500 p-2 rounded"
+          >
             Supply USDC
           </button>
         </div>

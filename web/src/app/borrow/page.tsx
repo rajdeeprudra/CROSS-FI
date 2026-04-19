@@ -2,11 +2,25 @@
 
 import { useState } from "react";
 import { AppShell } from "@/components/Shell";
+import { getContract } from "@/lib/contract";
 
 export default function BorrowPage() {
   const [amount, setAmount] = useState(0);
 
-  const maxBorrow = 750; // mock collateral logic
+  const maxBorrow = 750; // mock display (UI only)
+
+  const handleBorrow = async () => {
+    try {
+      const contract = await getContract();
+      const tx = await contract.borrow(amount);
+      await tx.wait();
+
+      alert("Borrow successful!");
+    } catch (err) {
+      console.error(err);
+      alert("Borrow failed");
+    }
+  };
 
   return (
     <AppShell>
@@ -37,7 +51,10 @@ export default function BorrowPage() {
             Max borrow: {maxBorrow} USDC
           </div>
 
-          <button className="w-full bg-sky-500 p-2 rounded">
+          <button
+            onClick={handleBorrow}
+            className="w-full bg-sky-500 p-2 rounded"
+          >
             Borrow
           </button>
         </div>
